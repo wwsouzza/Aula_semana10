@@ -35,3 +35,25 @@ from sklearn.metrics import confusion_matrix
 print(confusion_matrix(y_teste, y_prev))
 
 #Porque o quantidade de fraudes versus legitima é muito pequena e apresenta um desbalanceamento excessivo
+
+
+proba = modelo.predict_proba(X_teste)[:, 1]
+print(proba[:5].round(3))
+print("maior probabilidade prevista:" , proba.max().round(3))
+print("transações acima de 0,5:" , (proba > 0.5).sum())
+
+sns.histplot(x=proba, hue=y_teste.map({0: "Legítima", 1:
+"Fraude"}), bins=30, stat="count", common_norm=False)
+plt.axvline(0.5, color="black", linestyle="--")
+plt.yscale("log")
+plt.xlabel("probabilidade prevista de fraude (eixo y em escala log)")
+plt.show()
+
+from sklearn.metrics import precision_score, recall_score
+print("limiar precision recall alertas" )
+for corte in [0.5, 0.3, 0.2, 0.1, 0.05]:
+ prev = (proba >= corte).astype( int)
+ p, r = precision_score(y_teste, prev), recall_score(y_teste, prev)
+ print(f"{corte:6.2f} {p:9.2f} {r:6.2f} {prev.sum():7d}" )
+
+
