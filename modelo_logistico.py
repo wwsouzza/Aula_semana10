@@ -47,7 +47,8 @@ sns.histplot(x=proba, hue=y_teste.map({0: "Legítima", 1:
 plt.axvline(0.5, color="black", linestyle="--")
 plt.yscale("log")
 plt.xlabel("probabilidade prevista de fraude (eixo y em escala log)")
-plt.show()
+plt.savefig("histograma_probabilidades.png")
+plt.close()
 
 from sklearn.metrics import precision_score, recall_score
 print("limiar precision recall alertas" )
@@ -56,4 +57,15 @@ for corte in [0.5, 0.3, 0.2, 0.1, 0.05]:
  p, r = precision_score(y_teste, prev), recall_score(y_teste, prev)
  print(f"{corte:6.2f} {p:9.2f} {r:6.2f} {prev.sum():7d}" )
 
+from sklearn.tree import DecisionTreeClassifier
+arvore = Pipeline([("prep", prep), ("clf", DecisionTreeClassifier(random_state=42))])
+arvore.fit(X_treino, y_treino)
+print("recall no treino:", round(recall_score(y_treino, arvore.predict(X_treino)), 2))
+print("recall no teste: ", round(recall_score(y_teste, arvore.predict(X_teste)), 2))
 
+from sklearn.neighbors import KNeighborsClassifier
+knn = Pipeline([( "prep", prep), ("clf", KNeighborsClassifier(n_neighbors= 15))])
+knn.fit(X_treino, y_treino)
+print("recall do KNN no teste:" , round(recall_score(y_teste, knn.predict(X_teste)),
+2))
+print("alertas do KNN:" , knn.predict(X_teste). sum(), "de", len(y_teste))
