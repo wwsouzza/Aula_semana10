@@ -34,4 +34,4 @@ print(classification_report(y_teste, y_prev, target_names=["Legítima", "Fraude"
 from sklearn.metrics import confusion_matrix
 print(confusion_matrix(y_teste, y_prev))
 
-
+Porque o quantidade de fraudes versus legitima é muito pequena e apresenta um desbalanceamento excessivo
