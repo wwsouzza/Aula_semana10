@@ -69,3 +69,4 @@ knn.fit(X_treino, y_treino)
 print("recall do KNN no teste:" , round(recall_score(y_teste, knn.predict(X_teste)),
 2))
 print("alertas do KNN:" , knn.predict(X_teste). sum(), "de", len(y_teste))
+
